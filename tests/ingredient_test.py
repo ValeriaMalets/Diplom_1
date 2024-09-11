@@ -7,21 +7,39 @@ from praktikum.ingredient_types import INGREDIENT_TYPE_SAUCE, INGREDIENT_TYPE_FI
 class TestIngredient:
 
     @pytest.mark.parametrize(
-        "ingredient_type, name, price, expected_name, expected_price, expected_type",
+        "ingredient_type, name, price, expected_name",
         [
-            (INGREDIENT_TYPE_SAUCE, "Соус традиционный галактический", 15.0, "Соус традиционный галактический", 15.0,
-             INGREDIENT_TYPE_SAUCE),
-            (INGREDIENT_TYPE_FILLING, "Мясо бессмертных моллюсков", 1337.0, "Мясо бессмертных моллюсков", 1337.0,
-             INGREDIENT_TYPE_FILLING),
-            (INGREDIENT_TYPE_SAUCE, "Соус фирменный Space Sauce", 80.0, "Соус фирменный Space Sauce", 80.0,
-             INGREDIENT_TYPE_SAUCE),
+            (INGREDIENT_TYPE_SAUCE, "Соус традиционный галактический", 15.0, "Соус традиционный галактический"),
+            (INGREDIENT_TYPE_FILLING, "Мясо бессмертных моллюсков", 1337.0, "Мясо бессмертных моллюсков"),
+            (INGREDIENT_TYPE_SAUCE, "Соус фирменный Space Sauce", 80.0, "Соус фирменный Space Sauce"),
         ],
     )
-    def test_ingredient_attributes(self, ingredient_type, name, price, expected_name, expected_price, expected_type):
+    def test_get_name(self, ingredient_type, name, price, expected_name):
         ingredient = Ingredient(ingredient_type, name, price)
-        assert ingredient.get_name() == expected_name
-        assert ingredient.get_price() == expected_price
-        assert ingredient.get_type() == expected_type
+        assert ingredient.get_name() == expected_name, "Имя ингредиента неверное"
+
+    @pytest.mark.parametrize(
+        "ingredient_type, name, price, expected_price",
+        [
+            (INGREDIENT_TYPE_SAUCE, "Соус традиционный галактический", 15.0, 15.0),
+            (INGREDIENT_TYPE_FILLING, "Мясо бессмертных моллюсков", 1337.0, 1337.0),
+            (INGREDIENT_TYPE_SAUCE, "Соус фирменный Space Sauce", 80.0, 80.0),
+        ],
+    )
+    def test_get_price(self, ingredient_type, name, price, expected_price):
+        ingredient = Ingredient(ingredient_type, name, price)
+        assert ingredient.get_price() == expected_price, "Цена ингредиента неверная"
+
+    @pytest.mark.parametrize(
+        "ingredient_type, name, price, expected_type",
+        [
+            (INGREDIENT_TYPE_SAUCE, "Соус традиционный галактический", 15.0, INGREDIENT_TYPE_SAUCE),
+            (INGREDIENT_TYPE_FILLING, "Мясо бессмертных моллюсков", 1337.0, INGREDIENT_TYPE_FILLING),
+        ],
+    )
+    def test_get_type(self, ingredient_type, name, price, expected_type):
+        ingredient = Ingredient(ingredient_type, name, price)
+        assert ingredient.get_type() == expected_type, "Тип ингредиента неверный"
 
     @pytest.mark.parametrize(
         "initial_name, new_name",
@@ -50,18 +68,38 @@ class TestIngredient:
         ingredient.get_price.assert_called_once()
 
     @pytest.mark.parametrize(
-        "ingredient_type, name, price, expected_type_name, expected_type_price, expected_type",
+        "ingredient_type, name, price",
         [
-            (INGREDIENT_TYPE_SAUCE, "Соус Spicy-X", 90.0, str, float, str),
-            (INGREDIENT_TYPE_FILLING, "Мясо бессмертных моллюсков", 1337.0, str, float, str),
+            (INGREDIENT_TYPE_SAUCE, "Соус Spicy-X", 90.0),
+            (INGREDIENT_TYPE_FILLING, "Мясо бессмертных моллюсков", 1337.0),
         ],
     )
-    def test_types(self, ingredient_type, name, price, expected_type_name, expected_type_price, expected_type):
+    def test_name_type(self, ingredient_type, name, price):
         ingredient = Ingredient(ingredient_type, name, price)
-        assert isinstance(ingredient.get_name(), expected_type_name)
-        assert isinstance(ingredient.get_price(), expected_type_price)
-        assert isinstance(ingredient.get_type(), expected_type)
+        assert isinstance(ingredient.get_name(), str), "Тип имени должен быть строкой"
+
+    @pytest.mark.parametrize(
+        "ingredient_type, name, price",
+        [
+            (INGREDIENT_TYPE_SAUCE, "Соус Spicy-X", 90.0),
+            (INGREDIENT_TYPE_FILLING, "Мясо бессмертных моллюсков", 1337.0),
+        ],
+    )
+    def test_price_type(self, ingredient_type, name, price):
+        ingredient = Ingredient(ingredient_type, name, price)
+        assert isinstance(ingredient.get_price(), float), "Тип цены должен быть float"
+
+    @pytest.mark.parametrize(
+        "ingredient_type, name, price",
+        [
+            (INGREDIENT_TYPE_SAUCE, "Соус Spicy-X", 90.0),
+            (INGREDIENT_TYPE_FILLING, "Мясо бессмертных моллюсков", 1337.0),
+        ],
+    )
+    def test_type_type(self, ingredient_type, name, price):
+        ingredient = Ingredient(ingredient_type, name, price)
+        assert isinstance(ingredient.get_type(), str), "Тип значения должен быть строкой"
 
     def test_valid_ingredient_type(self):
         ingredient = Ingredient(INGREDIENT_TYPE_SAUCE, "Соус традиционный галактический", 15.0)
-        assert ingredient.get_type() in [INGREDIENT_TYPE_SAUCE, INGREDIENT_TYPE_FILLING]
+        assert ingredient.get_type() in [INGREDIENT_TYPE_SAUCE, INGREDIENT_TYPE_FILLING], "Тип ингредиента недопустимый"

@@ -1,12 +1,19 @@
 class TestBurger:
 
     def test_set_buns(self, burger, mock_bun):
+        burger.set_buns(mock_bun)
         assert burger.bun == mock_bun
 
     def test_add_ingredient(self, burger, mock_ingredient1):
         burger.add_ingredient(mock_ingredient1)
         assert len(burger.ingredients) == 1
         assert burger.ingredients[0] == mock_ingredient1
+
+    def test_add_multiple_ingredients(self, burger, mock_ingredient1, mock_ingredient2):
+        burger.add_ingredient(mock_ingredient1)
+        burger.add_ingredient(mock_ingredient2)
+        assert len(burger.ingredients) == 2
+        assert burger.ingredients == [mock_ingredient1, mock_ingredient2]
 
     def test_remove_ingredient(self, burger, mock_ingredient1, mock_ingredient2):
         burger.add_ingredient(mock_ingredient1)
@@ -24,7 +31,12 @@ class TestBurger:
 
     def test_get_price(self, burger, mock_ingredient1):
         burger.add_ingredient(mock_ingredient1)
-        assert burger.get_price() == 250  # 100 * 2 (bun) + 50 (ingredient)
+        assert burger.get_price() == 250
+
+    def test_get_price_multiple_ingredients(self, burger, mock_ingredient1, mock_ingredient2):
+        burger.add_ingredient(mock_ingredient1)
+        burger.add_ingredient(mock_ingredient2)
+        assert burger.get_price() == 280
 
     def test_get_receipt(self, burger, mock_ingredient1, mock_ingredient2):
         burger.add_ingredient(mock_ingredient1)

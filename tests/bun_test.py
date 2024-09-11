@@ -6,18 +6,28 @@ from praktikum.bun import Bun
 class TestBun:
 
     @pytest.mark.parametrize(
-        "name, price, expected_name, expected_price",
+        "name, expected_name",
         [
-            ("Флюоресцентная булка R2-D3", 988.0, "Флюоресцентная булка R2-D3", 988.0),
-            ("Краторная булка N-200i", 1255.0, "Краторная булка N-200i", 1255.0)
+            ("Флюоресцентная булка R2-D3", "Флюоресцентная булка R2-D3"),
+            ("Краторная булка N-200i", "Краторная булка N-200i")
         ],
     )
-    def test_get_name_and_price(self, name, price, expected_name, expected_price):
-        bun = Bun(name, price)
+    def test_get_name(self, name, expected_name):
+        bun = Bun(name, 988.0)
         assert bun.get_name() == expected_name
+
+    @pytest.mark.parametrize(
+        "price, expected_price",
+        [
+            (988.0, 988.0),
+            (1255.0, 1255.0)
+        ],
+    )
+    def test_get_price(self, price, expected_price):
+        bun = Bun("Флюоресцентная булка R2-D3", price)
         assert bun.get_price() == expected_price
 
-    def test_change_name_with_mock(self):
+    def test_mock_name(self):
         bun = Bun("Флюоресцентная булка R2-D3", 988.0)
         new_name = "Солнечная булка"
 
@@ -26,7 +36,7 @@ class TestBun:
         assert bun.get_name() == new_name
         bun.get_name.assert_called_once()
 
-    def test_change_price_with_mock(self):
+    def test_mock_price(self):
         bun = Bun("Флюоресцентная булка R2-D3", 988.0)
         new_price = 1000.0
 
@@ -36,13 +46,23 @@ class TestBun:
         bun.get_price.assert_called_once()
 
     @pytest.mark.parametrize(
-        "name, price, expected_type_name, expected_type_price",
+        "name, expected_type_name",
         [
-            ("Флюоресцентная булка R2-D3", 988.0, str, float),
-            ("Краторная булка N-200i", 1255.0, str, float),
+            ("Флюоресцентная булка R2-D3", str),
+            ("Краторная булка N-200i", str),
         ],
     )
-    def test_types(self, name, price, expected_type_name, expected_type_price):
-        bun = Bun(name, price)
+    def test_name_type(self, name, expected_type_name):
+        bun = Bun(name, 988.0)
         assert isinstance(bun.get_name(), expected_type_name)
+
+    @pytest.mark.parametrize(
+        "price, expected_type_price",
+        [
+            (988.0, float),
+            (1255.0, float),
+        ],
+    )
+    def test_price_type(self, price, expected_type_price):
+        bun = Bun("Флюоресцентная булка R2-D3", price)
         assert isinstance(bun.get_price(), expected_type_price)
